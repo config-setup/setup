@@ -1,4 +1,4 @@
-$!/usr/bin/env bash
+#!/usr/bin/env bash
 
 function clone_or_pull {
   if [ -d $1 ]; then
@@ -13,7 +13,7 @@ function clone_or_pull {
 apt update
 apt upgrade
 
-apt install software-properties-common 
+apt install software-properties-common
 
 # git
 apt install git
@@ -21,6 +21,7 @@ git config --global user.name "Reggles"
 git config --global user.email "reginaldbeakes@gmail.com"
 git config --global credential.helper store
 git config --global init.defaultBranch main
+git config --global push.autoSetupRemote true
 
 # python
 apt install python3-pip
@@ -28,11 +29,15 @@ curl https://pyenv.run | bash
 
 # zsh and ohmyzsh
 apt install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if ! command -v omz 2>&1 >/dev/null ; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+  omz update
+fi
 curl https://raw.githubusercontent.com/Reggles44/conf/refs/heads/main/zshrc -o ~/.zshrc
 
 # fzf
-clone_or_pull ~/.fzf "--depth 1 https://github.com/junegunn/fzf.git"
+clone_or_pull ~/.fzf "\-\-depth 1 https://github.com/junegunn/fzf.git"
 $(~/.fzf/install)
 
 # tmux
@@ -41,6 +46,6 @@ clone_or_pull ~/.config/tmux https://github.com/Reggles44/tmux.git
 clone_or_pull ~/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm
 
 # nvim
-apt install nvim
+apt install neovim
 clone_or_pull ~/.config/nvim https://github.com/Reggles44/nvim.git
 
