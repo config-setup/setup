@@ -29,7 +29,7 @@ curl https://pyenv.run | bash
 # zsh and ohmyzsh
 apt install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-curl https://raw.g -o ~/.zshrc
+curl https://raw.githubusercontent.com/Reggles44/conf/refs/heads/main/zshrc -o ~/.zshrc
 
 # fzf
 clone_or_pull ~/.fzf "--depth 1 https://github.com/junegunn/fzf.git"
