@@ -52,6 +52,9 @@ else
   starship preset nerd-font-symbols -o $HOME/.config/starship.toml
 fi
 
+# .local/bin
+clone_or_pull $HOME/.local/bin/ https://github.com/Reggles44/local-bin.git
+
 # fzf
 clone_or_pull $HOME/.fzf "\-\-depth 1 https://github.com/junegunn/fzf.git" ~/.fzf/install
 
@@ -61,7 +64,7 @@ clone_or_pull $HOME/.config/tmux https://github.com/Reggles44/tmux.git
 clone_or_pull $HOME/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm
 
 # nvim
-apt install ninja-build gettext cmake unzip curl build-essential ripgrep 
+apt install ninja-build gettext cmake unzip curl build-essential
 clone_or_pull $HOME/.nvim https://github.com/neovim/neovim
 pushd $HOME/.
 make CMAKE_BUILD_TYPE=RelWithDebInfo

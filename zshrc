@@ -116,7 +116,7 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/scripts:$PATH
 
 alias vim="nvim"
-alias update="sudo (curl https://github.com/Reggles44/conf/blob/main/install.sh | bash)"
+alias update="curl https://raw.githubusercontent.com/Reggles44/conf/refs/heads/main/install.sh | sudo bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 
 export NVM_DIR="$HOME/.config/nvm"
