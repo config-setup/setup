@@ -92,7 +92,7 @@ export PATH=$HOME/.local/scripts:$PATH
 alias vim="nvim"
 alias python="python3"
 
-alias update="curl https://github.com/config-setup/conf/blob/main/install.sh | sudo bash"
+alias update="curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/install.sh | sudo bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 
 # python
