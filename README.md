@@ -1,3 +1,3 @@
 ```
-curl https://raw.githubusercontent.com/Reggles44/conf/refs/heads/main/install.sh | bash
+curl https://raw.githubusercontent.com/config-setup/conf/refs/heads/main/install.sh | sudo bash
 ```

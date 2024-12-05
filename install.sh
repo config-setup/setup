@@ -18,7 +18,7 @@ apt autoremove -y
 ### DO NOT TOUCH ###
 # Downloading zshrc
 rm $HOME/.zshrc
-curl https://raw.githubusercontent.com/Reggles44/conf/refs/heads/main/zshrc -o $HOME/.zshrc
+curl https://raw.githubusercontent.com/config-setup/conf/refs/heads/main/zshrc -o $HOME/.zshrc
 ### DO NOT TOUCH ###
 
 # git
@@ -28,11 +28,12 @@ git config --global credential.helper store
 git config --global init.defaultBranch main
 git config --global push.autoSetupRemote true
 
-clone_or_pull $HOME/.local/bin/ https://github.com/Reggles44/local-bin.git # .local/bin
+clone_or_pull $HOME/.local/bin/ https://github.com/config-setup/local-bin.git # .local/bin
+clone_or_pull $HOME/.config/tmux https://github.com/config-setup/tmux.git # tmux config
+clone_or_pull $HOME/.config/nvim https://github.com/config-setup/nvim.git # nvim config
 clone_or_pull $HOME/.fzf "\-\-depth 1 https://github.com/junegunn/fzf.git" # fzf
-clone_or_pull $HOME/.config/tmux https://github.com/Reggles44/tmux.git     # tmux config
-clone_or_pull $HOME/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm  # tpm
-clone_or_pull $HOME/.nvim https://github.com/neovim/neovim                 # nvim
+clone_or_pull $HOME/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm # tpm
+clone_or_pull $HOME/.nvim https://github.com/neovim/neovim # nvim
 
 # zsh and ohmyzsh
 if ! command -v omz 2>&1 >/dev/null; then
