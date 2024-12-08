@@ -98,8 +98,9 @@ export PATH=$HOME/.local/scripts:$PATH
 alias vim="nvim"
 alias python="python3"
 
-alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
+alias update="curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
+
 
 # go
 export GOPATH=~/go
