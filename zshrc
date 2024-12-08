@@ -25,7 +25,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
@@ -71,9 +71,15 @@ export ZSH="$HOME/.oh-my-zsh"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  alias-finder aws copypath copyfile
-  encode64 extract git iterm2 macos npm nvm
-  pip pyenv python terraform urltools z
+  alias-finder 
+  ansible
+  aws 
+  copypath copyfile
+  encode64 extract 
+  git 
+  npm nvm
+  pip pyenv python 
+  tmux
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -92,13 +98,8 @@ export PATH=$HOME/.local/scripts:$PATH
 alias vim="nvim"
 alias python="python3"
 
-alias update="curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/install.sh | sudo bash"
+alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
-
-# python
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # go
 export GOPATH=~/go

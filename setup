@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+function clone_or_pull {
+  if [ -d "$1" ]; then
+    echo "git pull $2"
+    pushd $1 &> /dev/null
+    git pull &> /dev/null 
+    popd &> /dev/null 
+  else
+    echo "git clone $2 $1"
+    git clone "$2" $1 &> /dev/null
+  fi
+}
+
+function copy_from_setup {
+  path=$1
+  file=$(basename $path)
+  echo "Copying $file to $path"
+  curl https://github.com/config-setup/$file -o $path &> /dev/null
+}
+
+# deps
+# apt update &> /dev/null
+# apt install git software-properties-common python3-pip zsh tmux ninja-build gettext cmake unzip curl build-essential -y &> /dev/null
+
+# git
+git config --global user.name "Reggles"
+git config --global user.email "reginaldbeakes@gmail.com"
+git config --global credential.helper store
+git config --global init.defaultBranch main
+git config --global push.autoSetupRemote true
+
+# config files
+copy_from_setup ~/.zshrc
+copy_from_setup ~/.zsh_profile
+
+# config flies in git
+clone_or_pull ~/.local/bin/ https://github.com/config-setup/local-bin.git # .local/bin
+clone_or_pull ~/.config/tmux https://github.com/config-setup/tmux.git # tmux config
+clone_or_pull ~/.config/nvim https://github.com/config-setup/nvim.git # nvim config
+clone_or_pull ~/.fzf "\-\-depth 1 https://github.com/junegunn/fzf.git" # fzf
+clone_or_pull ~/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm # tpm
+clone_or_pull ~/.nvim https://github.com/neovim/neovim # nvim
+
+# ohmyzsh
+if ! command -v omz 2>&1 >/dev/null; then
+  echo "Installing ohmyzsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &> /dev/null
+else
+  echo "Updating ohmyzsh"
+  omz update &> /dev/null&
+fi
+
+# pyenv
+if ! command -v pyenv 2>&1 >/dev/null; then
+  echo "Installing pyenv"
+  curl https://pyenv.run | bash &> /dev/null
+fi
+
+# fzf
+echo "Installing/Updating fzf"
+~/.fzf/install --all &> /dev/null
+
+# starship
+echo "Installing/Updating starship"
+curl -sS https://starship.rs/install.sh | sh -s -- -y &> /dev/null
+starship preset nerd-font-symbols -o ~/.config/starship.toml &> /dev/null
+
+# nvim
+echo "Building Neovim"
+pushd ~/.nvim &> /dev/null
+make CMAKE_BUILD_TYPE=RelWithDebInfo &> /dev/null
+make install &> /dev/null
+popd &> /dev/null
+
+# node version manager
+echo "Installing Node Version Manager"
+curl -sS https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash -s -- &> /dev/null
+
+# golang install
+echo "Installing golang"
+GO_VERSION="1.23.3"
+ARCH="amd64"
+mkdir -p ~/go/
+curl -o ~/go.tar.gz -sSL "https://golang.org/dl/go${GO_VERSION}.linux-${ARCH}.tar.gz"
+tar -xf ~/go.tar.gz -C ~/go/
+rm -f ~/go.gar.gz
+
+# rust install
+if ! command -v rustup 2>&1 >/dev/null; then
+  echo "Installing Rust"
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y &> /dev/null
+else
+  echo "Updating Rust"
+  rustup update &> /dev/null
+fi
+
