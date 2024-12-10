@@ -1,5 +1,5 @@
 ```
 apt update
-apt install git software-properties-common python3-pip zsh tmux ninja-build gettext cmake unzip curl build-essential -y
+apt install software-properties-common git zsh tmux dirmngr gpg gawk -y
 curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash
 ```

@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function copy_from_setup {
+  path=$1
+  file=$(basename $path)
+  echo "Copying $file to $path"
+  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/$file -o $path &> /dev/null
+}
+
 function clone_or_pull {
   if [ -d "$2" ]; then
     echo "git pull $1"
@@ -12,12 +19,21 @@ function clone_or_pull {
   fi
 }
 
-function copy_from_setup {
-  path=$1
-  file=$(basename $path)
-  echo "Copying $file to $path"
-  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/$file -o $path &> /dev/null
+asdf=~/.asdf/bin/asdf
+function asdf_latest {
+  $asdf plugin add $1
+  $asdf install $1 latest
+  $asdf global $1 latest
 }
+
+# ohmyzsh
+if ! command -v omz 2>&1 >/dev/null; then
+  echo "Installing ohmyzsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &> /dev/null
+else
+  echo "Updating ohmyzsh"
+  omz update &> /dev/null&
+fi
 
 # deps
 # apt update &> /dev/null
@@ -37,55 +53,14 @@ copy_from_setup ~/.zshrc
 clone_or_pull https://github.com/config-setup/local-bin.git ~/.local/bin/
 clone_or_pull https://github.com/config-setup/tmux.git ~/.config/tmux
 clone_or_pull https://github.com/config-setup/nvim.git ~/.config/nvim
-clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
-clone_or_pull https://github.com/junegunn/fzf.git ~/.fzf
 clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-clone_or_pull https://github.com/neovim/neovim ~/.nvim
+clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
 
-# ohmyzsh
-if ! command -v omz 2>&1 >/dev/null; then
-  echo "Installing ohmyzsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &> /dev/null
-else
-  echo "Updating ohmyzsh"
-  omz update &> /dev/null&
-fi
-
-# fzf
-echo "Installing/Updating fzf"
-~/.fzf/install --all &> /dev/null
-
-# starship
-echo "Installing/Updating starship"
-curl -sS https://starship.rs/install.sh | sh -s -- -y &> /dev/null
-starship preset nerd-font-symbols -o ~/.config/starship.toml &> /dev/null
-
-# nvim
-echo "Building Neovim"
-pushd ~/.nvim &> /dev/null
-make CMAKE_BUILD_TYPE=RelWithDebInfo &> /dev/null
-make install &> /dev/null
-popd &> /dev/null
-
-# node version manager
-echo "Installing Node Version Manager"
-curl -sS https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash -s -- &> /dev/null
-
-# golang install
-echo "Installing golang"
-GO_VERSION="1.23.3"
-ARCH="amd64"
-mkdir -p ~/go/
-curl -o ~/go.tar.gz -sSL "https://golang.org/dl/go${GO_VERSION}.linux-${ARCH}.tar.gz"
-tar -xf ~/go.tar.gz -C ~/go/
-rm -f ~/go.gar.gz
-
-# rust install
-if ! command -v rustup 2>&1 >/dev/null; then
-  echo "Installing Rust"
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y &> /dev/null
-else
-  echo "Updating Rust"
-  rustup update &> /dev/null
-fi
+asdf_latest fzf
+asdf_latest starship
+asdf_latest neovim
+asdf_latest python
+asdf_latest nodejs
+asdf_latest golang
+asdf_latest rust
 
