@@ -16,7 +16,7 @@ function copy_from_setup {
   path=$1
   file=$(basename $path)
   echo "Copying $file to $path"
-  curl https://github.com/config-setup/$file -o $path &> /dev/null
+  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/$file -o $path &> /dev/null
 }
 
 # deps

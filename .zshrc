@@ -85,6 +85,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+source $HOME/.zsh_profile
 
 export XDG_CONFIG_HOME=$HOME/.config
 
