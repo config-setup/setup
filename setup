@@ -21,9 +21,11 @@ function clone_or_pull {
 
 asdf=~/.asdf/bin/asdf
 function asdf_latest {
-  $asdf plugin add $1
-  $asdf install $1 latest
-  $asdf global $1 latest
+  plugin=$1
+  version=${2:-latest}
+  $asdf plugin add $plugin &> /dev/null
+  $asdf install $plugin $version
+  $asdf global $plugin $version
 }
 
 # ohmyzsh
@@ -58,8 +60,8 @@ clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
 
 asdf_latest fzf
 asdf_latest starship
-asdf_latest neovim
-asdf_latest python
+asdf_latest neovim stable
+asdf_latest python latest:3.12.7
 asdf_latest nodejs
 asdf_latest golang
 asdf_latest rust
