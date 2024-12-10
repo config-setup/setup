@@ -70,7 +70,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(asdf fzf git nvm)
+plugins=(asdf fzf git nvm starship)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -99,11 +99,4 @@ export PATH="/usr/local/go/bin:$GOBIN:$PATH"
 # rust
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# node version manager
-# export NVM_DIR="$HOME/.config/nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# starship
-eval "$(starship init zsh)"
 
