@@ -70,23 +70,11 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  alias-finder 
-  ansible
-  aws 
-  copypath copyfile
-  encode64 extract 
-  git 
-  npm nvm
-  pip pyenv python 
-  tmux
-)
+plugins=(asdf fzf git nvm)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-source $HOME/.zsh_profile
-
 export XDG_CONFIG_HOME=$HOME/.config
 
 VIM="nvim"
@@ -102,7 +90,6 @@ alias python="python3"
 alias update="curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 
-
 # go
 export GOPATH=~/go
 export GOBIN="$GOPATH/bin"
@@ -113,12 +100,9 @@ export PATH="/usr/local/go/bin:$GOBIN:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # node version manager
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# export NVM_DIR="$HOME/.config/nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # starship
 eval "$(starship init zsh)"

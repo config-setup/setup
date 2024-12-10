@@ -32,12 +32,12 @@ git config --global push.autoSetupRemote true
 
 # config files
 copy_from_setup ~/.zshrc
-copy_from_setup ~/.zsh_profile
 
 # config flies in git
 clone_or_pull ~/.local/bin/ https://github.com/config-setup/local-bin.git # .local/bin
 clone_or_pull ~/.config/tmux https://github.com/config-setup/tmux.git # tmux config
 clone_or_pull ~/.config/nvim https://github.com/config-setup/nvim.git # nvim config
+clone_or_pull ~/.asdf https://github.com/asdf-vm/asdf.git # asdf
 clone_or_pull ~/.fzf "\-\-depth 1 https://github.com/junegunn/fzf.git" # fzf
 clone_or_pull ~/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm # tpm
 clone_or_pull ~/.nvim https://github.com/neovim/neovim # nvim
@@ -49,12 +49,6 @@ if ! command -v omz 2>&1 >/dev/null; then
 else
   echo "Updating ohmyzsh"
   omz update &> /dev/null&
-fi
-
-# pyenv
-if ! command -v pyenv 2>&1 >/dev/null; then
-  echo "Installing pyenv"
-  curl https://pyenv.run | bash &> /dev/null
 fi
 
 # fzf
