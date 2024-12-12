@@ -34,19 +34,8 @@ if ! command -v omz 2>&1 >/dev/null; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &> /dev/null
 else
   echo "Updating ohmyzsh"
-  omz update &> /dev/null&
+  omz update &> /dev/null
 fi
-
-# deps
-# apt update &> /dev/null
-# apt install git software-properties-common python3-pip zsh tmux ninja-build gettext cmake unzip curl build-essential -y &> /dev/null
-
-# git
-git config --global user.name "Reggles"
-git config --global user.email "reginaldbeakes@gmail.com"
-git config --global credential.helper store
-git config --global init.defaultBranch main
-git config --global push.autoSetupRemote true
 
 # config files
 copy_from_setup ~/.zshrc
