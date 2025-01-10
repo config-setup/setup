@@ -89,16 +89,16 @@ alias vim="nvim"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 
-function config() {
-  declare -A configs = (
-    ["zsh"] = "~/.zshrc"
-    ["nvim"] = "~/.config/nvim"
-    ["tmux"] = "~/.config/tmux"
-  )
-
-  if [ $# -eq 1 ]; then
-    nvim "${configs[$1]}"
-  else
-    echo "Usage: config [${!hashmap[@]}]"
+config () {
+  if [ -n "$1" ]; then 
+    echo "Usage: config <zsh/nvim/tmux>"
+    exit 1
   fi
+
+  case "$1" in
+    zsh) nvim ~/.zshrc;;
+    nvim) nvim ~/.config/nvim/;;
+    tmux) nvim ~/.config/tmux/;;
+    *) echo "Usage: config <zsh/nvim/tmux>";;
+  esac
 }
