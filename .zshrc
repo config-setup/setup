@@ -89,7 +89,7 @@ alias vim="nvim"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 
-function config {
+function config() {
   declare -a configs = (
     ["zsh"] = "~/.zshrc"
     ["nvim"] = "~/.config/nvim"
