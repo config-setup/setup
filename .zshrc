@@ -90,7 +90,7 @@ alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / '
 alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 
 function config() {
-  declare -a configs = (
+  declare -A configs = (
     ["zsh"] = "~/.zshrc"
     ["nvim"] = "~/.config/nvim"
     ["tmux"] = "~/.config/tmux"
@@ -100,6 +100,5 @@ function config() {
     nvim "${configs[$1]}"
   else
     echo "Usage: config [${!hashmap[@]}]"
-    exit 0
   fi
 }
