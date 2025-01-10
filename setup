@@ -19,15 +19,12 @@ function clone_or_pull {
   fi
 }
 
-if ! command -v asdf 2>&1 > /dev/null; then
-  asdf=
-asdf=~/.asdf/bin/asdf
 function asdf_latest {
   plugin=$1
   version=${2:-latest}
-  $asdf plugin add $plugin &> /dev/null
-  $asdf install $plugin $version
-  $asdf global $plugin $version
+  ~/.asdf/bin/asdf plugin add $plugin &> /dev/null
+  ~/.asdf/bin/asdf install $plugin $version
+  ~/.asdf/bin/asdf global $plugin $version
 }
 
 # ohmyzsh
@@ -48,6 +45,7 @@ clone_or_pull https://github.com/config-setup/tmux.git ~/.config/tmux
 clone_or_pull https://github.com/config-setup/nvim.git ~/.config/nvim
 clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
+
 
 asdf_latest fzf
 asdf_latest starship
