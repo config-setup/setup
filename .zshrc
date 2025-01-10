@@ -84,13 +84,20 @@ export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/scripts:$PATH
 
+declare -a configs = (
+  ["zsh"] = "~/.zshrc"
+  ["nvim"] = "~/.config/nvim"
+  ["tmux"] = "~/.config/tmux"
+)
+
 alias vim="nvim"
-alias python="python3"
-
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
+alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 
-function update {
-  (cd ~/.local/bin/; git pull)
-  (cd ~/.config/tmux/; git pull)
-  (cd ~/.config/nvim/; git pull)
+function config {
+  if [ $# -eq 1 ]; then
+    nvim "${configs[$1]}"
+  else
+    echo "Usage: config [${!hashmap[@]}]"
+    exit 0
 }
