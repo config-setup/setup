@@ -19,6 +19,8 @@ function clone_or_pull {
   fi
 }
 
+if ! command -v asdf 2>&1 > /dev/null; then
+  asdf=
 asdf=~/.asdf/bin/asdf
 function asdf_latest {
   plugin=$1

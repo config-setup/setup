@@ -70,7 +70,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(asdf fzf git nvm starship)
+plugins=(asdf git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,16 +87,10 @@ export PATH=$HOME/.local/scripts:$PATH
 alias vim="nvim"
 alias python="python3"
 
-alias update="curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 
-# go
-export GOPATH=~/go
-export GOBIN="$GOPATH/bin"
-export GOROOT="/usr/local/go/"
-export PATH="/usr/local/go/bin:$GOBIN:$PATH"
-
-# rust
-export PATH="$HOME/.cargo/bin:$PATH"
-
-
+function update {
+  (cd ~/.local/bin/; git pull)
+  (cd ~/.config/tmux/; git pull)
+  (cd ~/.config/nvim/; git pull)
+}
