@@ -70,7 +70,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(asdf git)
+plugins=(asdf git starship)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -101,4 +101,5 @@ function config {
   else
     echo "Usage: config [${!hashmap[@]}]"
     exit 0
+  fi
 }
