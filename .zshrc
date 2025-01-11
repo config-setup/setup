@@ -84,21 +84,7 @@ export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/scripts:$PATH
 
-
 alias vim="nvim"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
 alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
 
-config () {
-  if [ -n "$1" ]; then 
-    echo "Usage: config <zsh/nvim/tmux>"
-    exit 1
-  fi
-
-  case "$1" in
-    zsh) nvim ~/.zshrc;;
-    nvim) nvim ~/.config/nvim/;;
-    tmux) nvim ~/.config/tmux/;;
-    *) echo "Usage: config <zsh/nvim/tmux>";;
-  esac
-}
