@@ -51,7 +51,6 @@ asdf_latest fzf
 asdf_latest jq
 asdf_latest starship
 asdf_latest neovim stable
-asdf_latest ansible-base
 asdf_latest terraform
 asdf_latest terragrunt
 asdf_latest kubectl
@@ -62,3 +61,5 @@ asdf_latest nodejs
 asdf_latest golang
 asdf_latest rust
 
+python3 -m pip install -U pip
+python3 -m pip install ansible ruff
