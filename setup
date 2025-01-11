@@ -2,17 +2,17 @@
 
 function copy_from_setup {
   path=$1
-  file=$(basename $path)
+  file=$(basename "$path")
   echo "Copying $file to $path"
-  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/$file -o $path &> /dev/null
+  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path" &> /dev/null
 }
 
 function clone_or_pull {
   if [ -d "$2" ]; then
     echo "git pull $1"
-    pushd $2 &> /dev/null
+    pushd "$2" || exit
     git pull &> /dev/null 
-    popd &> /dev/null 
+    popd || exit
   else
     echo "git clone $@"
     git clone $@ &> /dev/null
@@ -22,9 +22,9 @@ function clone_or_pull {
 function asdf_latest {
   plugin=$1
   version=${2:-latest}
-  ~/.asdf/bin/asdf plugin add $plugin &> /dev/null
-  ~/.asdf/bin/asdf install $plugin $version
-  ~/.asdf/bin/asdf global $plugin $version
+  ~/.asdf/bin/asdf plugin add "$plugin" &> /dev/null
+  ~/.asdf/bin/asdf install "$plugin" "$version"
+  ~/.asdf/bin/asdf global "$plugin" "$version"
 }
 
 # ohmyzsh
@@ -46,10 +46,17 @@ clone_or_pull https://github.com/config-setup/nvim.git ~/.config/nvim
 clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
 
-
+# Tools
 asdf_latest fzf
+asdf_latest jq
 asdf_latest starship
 asdf_latest neovim stable
+asdf_latest ansible
+asdf_latest terraform
+asdf_latest terragrunt
+asdf_latest kubectl
+
+# Languages
 asdf_latest python latest:3.12.7
 asdf_latest nodejs
 asdf_latest golang
