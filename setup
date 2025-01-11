@@ -51,7 +51,7 @@ asdf_latest fzf
 asdf_latest jq
 asdf_latest starship
 asdf_latest neovim stable
-asdf_latest ansible
+asdf_latest ansible-base
 asdf_latest terraform
 asdf_latest terragrunt
 asdf_latest kubectl
