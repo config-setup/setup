@@ -10,12 +10,12 @@ function copy_from_setup {
 function clone_or_pull {
   if [ -d "$2" ]; then
     echo "git pull $1"
-    pushd "$2" || exit
-    git pull &> /dev/null 
-    popd || exit
+    pushd "$2" || exit &> /dev/null
+    git pull &> /dev/null
+    popd || exit &> /dev/null
   else
     echo "git clone $@"
-    git clone $@ &> /dev/null
+    git clone "$@" &> /dev/null
   fi
 }
 
@@ -62,4 +62,4 @@ asdf_latest golang
 asdf_latest rust
 
 python3 -m pip install -U pip
-python3 -m pip install ansible ruff
+python3 -m pip install ruff
