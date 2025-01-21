@@ -3,18 +3,15 @@
 function copy_from_setup {
   path=$1
   file=$(basename "$path")
-  echo "Copying $file to $path"
-  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path" &> /dev/null
+  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path" &>/dev/null
 }
 
 function clone_or_pull {
   if [ -d "$2" ]; then
-    echo "git pull $1"
-    pushd "$2" || exit &> /dev/null
+    pushd "$2" || exit &>/dev/null
     git pull
-    popd || exit &> /dev/null
+    popd || exit &>/dev/null
   else
-    echo git clone "$@"
     git clone "$@"
   fi
 }
@@ -28,11 +25,9 @@ function asdf_latest {
 }
 
 # ohmyzsh
-if ! command -v omz 2>&1 >/dev/null; then
-  echo "Installing ohmyzsh"
+if [ -z "${ZSH}" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
-  echo "Updating ohmyzsh"
   omz update
 fi
 
@@ -62,4 +57,3 @@ asdf_latest golang
 asdf_latest rust
 
 python3 -m pip install -U pip ruff
-
