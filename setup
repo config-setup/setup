@@ -8,9 +8,9 @@ function copy_from_setup {
 
 function clone_or_pull {
   if [ -d "$2" ]; then
-    pushd "$2" || exit &>/dev/null
+    pushd "$2" &> /dev/null || exit
     git pull
-    popd || exit &>/dev/null
+    popd &> /dev/null || exit
   else
     git clone "$@"
   fi
@@ -28,7 +28,7 @@ function asdf_latest {
 if [ -z "${ZSH}" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
-  omz update
+  $(omz update)
 fi
 
 # config files
