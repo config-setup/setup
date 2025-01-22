@@ -9,9 +9,10 @@ function copy_from_setup {
 function clone_or_pull {
   url=$1
   dest=$2
+
   if [ -d "$dest" ]; then
     pushd "$dest" &> /dev/null || exit
-    git pull
+    echo "$url" "$(git pull)"
     popd &> /dev/null || exit
   else
     git clone "$url" "$dest"
