@@ -83,6 +83,7 @@ export GIT_EDITOR=$VIM
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/scripts:$PATH
+export PATH=$PATH:/opt/homebrew/bin
 
 alias vim="nvim"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
