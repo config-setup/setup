@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# Detect OS
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+# Detect Architecture
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64) ARCH="amd64" ;;
+    armv7l) ARCH="arm" ;;
+    aarch64) ARCH="arm64" ;;
+    i386) ARCH="386" ;;
+    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+esac
+
+
 function copy_from_setup {
   path=$1
   file=$(basename "$path")
@@ -19,18 +33,12 @@ function clone_or_pull {
   fi
 }
 
-function asdf_latest {
-  plugin=$1
-  version=${2:-latest}
-  ~/.asdf/bin/asdf plugin add "$plugin" &> /dev/null
-  ~/.asdf/bin/asdf install "$plugin" "$version"
-  ~/.asdf/bin/asdf global "$plugin" "$version"
-}
 
 # ohmyzsh
 if [ -z "${ZSH}" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
+
 
 # config files
 copy_from_setup ~/.zshrc
@@ -40,7 +48,19 @@ clone_or_pull https://github.com/config-setup/local-bin.git ~/.local/bin/
 clone_or_pull https://github.com/config-setup/tmux.git ~/.config/tmux
 clone_or_pull https://github.com/config-setup/nvim.git ~/.config/nvim
 clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-clone_or_pull https://github.com/asdf-vm/asdf.git ~/.asdf
+
+# asdf
+ASDF_PATH=~/.local/bin/asdf
+ASDF_LATEST_RELEASE=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep -oP '"tag_name": "\K[^"]+')
+curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$OS-$ARCH.tar.gz" -o "${ASDF_PATH}"
+
+function asdf_latest {
+  plugin=$1
+  version=${2:-latest}
+  ${ASDF_PATH} plugin add "$plugin" &> /dev/null
+  ${ASDF_PATH} install "$plugin" "$version"
+  ${ASDF_PATH} "$plugin" "$version"
+}
 
 # Tools
 asdf_latest fzf
