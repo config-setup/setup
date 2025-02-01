@@ -52,6 +52,7 @@ clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # asdf
 ASDF_PATH=~/.local/bin/asdf
 ASDF_LATEST_RELEASE=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep -oP '"tag_name": "\K[^"]+')
+echo "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$OS-$ARCH.tar.gz"
 curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$OS-$ARCH.tar.gz" -o "${ASDF_PATH}"
 
 function asdf_latest {
