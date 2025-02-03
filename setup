@@ -73,7 +73,7 @@ setup() {
   fi
 
   # config files
-  copy_from_setup ~/.zshrc
+  setup::download ~/.zshrc
 
   # config flies in git
   git::clone https://github.com/config-setup/local-bin.git ~/.local/bin/
