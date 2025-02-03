@@ -6,80 +6,107 @@ OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 # Detect Architecture
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) ARCH="amd64" ;;
-    armv7l) ARCH="arm" ;;
-    aarch64) ARCH="arm64" ;;
-    i386) ARCH="386" ;;
-    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+x86_64) ARCH="amd64" ;;
+armv7l) ARCH="arm" ;;
+aarch64) ARCH="arm64" ;;
+i386) ARCH="386" ;;
+*)
+  echo "Unsupported architecture: $ARCH"
+  exit 1
+  ;;
 esac
 
+command_exists() {
+  command -v "$@" >/dev/null 2>&1
+}
 
-function copy_from_setup {
+setup::download() {
   path=$1
   file=$(basename "$path")
   curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path" &>/dev/null
 }
 
-function clone_or_pull {
-  url=$1
-  dest=$2
+git::clone() {
+  local repo_url=$1
+  local repo_dir=$2
 
-  if [ -d "$dest" ]; then
-    pushd "$dest" &> /dev/null || exit
-    echo "$url" "$(git pull)"
-    popd &> /dev/null || exit
+  if [ -d "$repo_dir" ]; then
+    pushd "$repo_dir" &>/dev/null || exit
+    echo "$repo_url"
+    git pull
+    popd &>/dev/null || exit
   else
-    git clone "$url" "$dest"
+    git clone "$repo_url" "$repo_dir"
   fi
 }
 
+# git::download() {
+#   local repo_url=$1
+#   local target_dir=$2
+#
+#   local latest_release=$(curl -s $repo_url | grep -oP '"tag_name": "\K[^"]+')
+#   local download_url="$repo/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz"
+#   curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin/
+#
+# }
 
-# ohmyzsh
-if [ -z "${ZSH}" ]; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
+asdf::install() {
+  local latest_release
+  latest_release=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep -oP '"tag_name": "\K[^"]+')
 
-
-# config files
-copy_from_setup ~/.zshrc
-
-# config flies in git
-clone_or_pull https://github.com/config-setup/local-bin.git ~/.local/bin/
-clone_or_pull https://github.com/config-setup/tmux.git ~/.config/tmux
-clone_or_pull https://github.com/config-setup/nvim.git ~/.config/nvim
-clone_or_pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-# asdf
-ASDF_PATH=~/.local/bin/asdf
-ASDF_LATEST_RELEASE=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep -oP '"tag_name": "\K[^"]+')
-echo "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz"
-curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz" | tar -xz -C $ASDF_PATH
-
-function asdf_latest {
-  plugin=$1
-  version=${2:-latest}
-  ${ASDF_PATH} plugin add "$plugin" &> /dev/null
-  ${ASDF_PATH} install "$plugin" "$version"
-  ${ASDF_PATH} "$plugin" "$version"
+  curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$latest_release/asdf-$latest_release-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin/
 }
 
-# Tools
-asdf_latest fzf
-asdf_latest jq
-asdf_latest starship
-asdf_latest neovim stable
-asdf_latest terraform
-asdf_latest terragrunt
-asdf_latest kubectl
+asdf::plugin::install() {
+  local plugin=$1
+  local version=${2:-latest}
 
-# Languages
-asdf_latest python latest:3.12.7
-asdf_latest nodejs
-asdf_latest golang
-asdf_latest rust
+  ~/.local/bin/asdf plugin add "$plugin"
+  ~/.local/bin/asdf install "$plugin" "$version"
+  ~/.local/bin/asdf set --home "$plugin" "$version"
+}
 
-# Install Docker
-curl -fsSL https://get.docker.com | bash
+setup() {
+  # ohmyzsh
+  if [ -z "${ZSH}" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  fi
 
-# Python Packages
-python3 -m pip install -U pip ruff
+  # config files
+  copy_from_setup ~/.zshrc
+
+  # config flies in git
+  git::clone https://github.com/config-setup/local-bin.git ~/.local/bin/
+  git::clone https://github.com/config-setup/tmux.git ~/.config/tmux
+  git::clone https://github.com/config-setup/nvim.git ~/.config/nvim
+  git::clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+  # asdf
+  asdf::install
+
+  # asdf tools
+  asdf::plugin::install jq
+  asdf::plugin::install starship
+  asdf::plugin::install neovim stable
+  asdf::plugin::install terraform
+  asdf::plugin::install terragrunt
+  asdf::plugin::install kubectl
+
+  # asdf languages
+  asdf::plugin::install python latest:3.12.7
+  asdf::plugin::install nodejs
+  asdf::plugin::install golang
+  asdf::plugin::install rust
+
+  # Python Packages
+  python3 -m pip install -U pip ruff
+}
+
+setup::docker() {
+  curl -fsSL https://get.docker.com | bash
+}
+
+case $1 in
+docker) setup::docker ;;
+*) setup ;;
+esac
