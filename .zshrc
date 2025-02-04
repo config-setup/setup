@@ -70,7 +70,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(asdf fzf git starship)
+plugins=(fzf git starship)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -84,10 +84,14 @@ export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/scripts:$PATH
 export PATH=$PATH:/opt/homebrew/bin
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 alias vim="nvim"
 alias my_ip="ip address | grep -o \"inet 192.*/\" | awk '{ print \$2 }' | tr / ' ' | xargs"
-alias update="curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash"
+
+update() {
+  curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash -s -- "$@"
+}
 
 # Go env setup
 . ~/.asdf/plugins/golang/set-env.zsh

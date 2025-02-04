@@ -23,17 +23,17 @@ command_exists() {
 setup::download() {
   path=$1
   file=$(basename "$path")
-  curl https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path" &>/dev/null
+  curl -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path"
 }
 
 git::clone() {
   local repo_url=$1
   local repo_dir=$2
+  local git_stdout
 
   if [ -d "$repo_dir" ]; then
     pushd "$repo_dir" &>/dev/null || exit
-    echo "$repo_url"
-    git pull
+    git pull 
     popd &>/dev/null || exit
   else
     git clone "$repo_url" "$repo_dir"
@@ -42,15 +42,16 @@ git::clone() {
 
 # git::download() {
 #   local repo_url=$1
-#   local target_dir=$2
+#   local file=$2
+#   local target_dir=$3
 #
 #   local latest_release=$(curl -s $repo_url | grep -oP '"tag_name": "\K[^"]+')
 #   local download_url="$repo/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz"
-#   curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin/
-#
+#   curl -fsSL  | tar -xz -C ~/.local/bin/
 # }
 
 asdf::install() {
+
   local latest_release
   latest_release=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep -oP '"tag_name": "\K[^"]+')
 
@@ -60,10 +61,20 @@ asdf::install() {
 asdf::plugin::install() {
   local plugin=$1
   local version=${2:-latest}
+  local asdf=~/.local/bin/asdf
 
-  ~/.local/bin/asdf plugin add "$plugin"
-  ~/.local/bin/asdf install "$plugin" "$version"
-  ~/.local/bin/asdf set --home "$plugin" "$version"
+
+  if [[ -z $(asdf plugin list | grep $plugin) ]]; then
+    asdf plugin add $plugin
+  else
+    asdf plugin update $plugin &> /dev/null
+  fi
+
+  if [[ -z $(asdf list $plugin | grep $version) ]]; then
+    asdf install $plugin
+  fi
+
+  asdf set --home $plugin $version
 }
 
 setup() {
