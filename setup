@@ -62,8 +62,6 @@ asdf::plugin::install() {
   local version=${2:-latest}
   local asdf=~/.local/bin/asdf
 
-  echo "$plugin $version"
-
   if [[ -z $(asdf plugin list | grep "$plugin") ]]; then
     asdf plugin add "$plugin"
   else
@@ -75,6 +73,9 @@ asdf::plugin::install() {
   fi
 
   asdf set --home "$plugin" "$version"
+  echo "$plugin set to $(asdf list $plugin | grep \* | sed -e 's/ \*//')"
+
+
 }
 
 setup() {
