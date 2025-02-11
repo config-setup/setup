@@ -29,14 +29,13 @@ setup::download() {
 git::clone() {
   local repo_url=$1
   local repo_dir=$2
-  local git_stdout
 
   if [ -d "$repo_dir" ]; then
     pushd "$repo_dir" &>/dev/null || exit
-    echo $repo_url $(git pull)
+    echo "$repo_url $(git pull)"
     popd &>/dev/null || exit
   else
-    echo $repo_url $(git clone "$repo_url" "$repo_dir")
+    echo "$repo_url $(git clone "$repo_url" "$repo_dir")"
   fi
 }
 
@@ -63,18 +62,19 @@ asdf::plugin::install() {
   local version=${2:-latest}
   local asdf=~/.local/bin/asdf
 
+  echo "$plugin $version"
 
-  if [[ -z $(asdf plugin list | grep $plugin) ]]; then
-    asdf plugin add $plugin
+  if [[ -z $(asdf plugin list | grep "$plugin") ]]; then
+    asdf plugin add "$plugin"
   else
-    asdf plugin update $plugin &> /dev/null
+    asdf plugin update "$plugin" &> /dev/null
   fi
 
-  if [[ -z $(asdf list $plugin | grep $version) ]]; then
-    asdf install $plugin
+  if [[ -z $(asdf list "$plugin" | grep "$version") ]]; then
+    asdf install "$plugin"
   fi
 
-  asdf set --home $plugin $version
+  asdf set --home "$plugin" "$version"
 }
 
 setup() {
