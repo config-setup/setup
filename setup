@@ -8,7 +8,7 @@ ARCH=$(uname -m)
 case "$ARCH" in
 x86_64) ARCH="amd64" ;;
 armv7l) ARCH="arm" ;;
-aarch64) ARCH="arm64" ;;
+aarch64|arm64) ARCH="arm64" ;;
 i386) ARCH="386" ;;
 *)
   echo "Unsupported architecture: $ARCH"
