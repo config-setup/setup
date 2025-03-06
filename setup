@@ -69,7 +69,7 @@ asdf::plugin::install() {
   fi
 
   if [[ -z $(asdf list "$plugin" | grep "$version") ]]; then
-    asdf install "$plugin"
+    asdf install "$plugin" "$version"
   fi
 
   asdf set --home "$plugin" "$version"
@@ -94,12 +94,15 @@ setup() {
   git::clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
   # asdf
+  
   asdf::install
 
   # asdf tools
   asdf::plugin::install jq
   asdf::plugin::install starship
   asdf::plugin::install neovim stable
+  asdf::plugin::install lazydocker
+  asdf::plugin::install lazygit
   asdf::plugin::install terraform
   asdf::plugin::install terragrunt
   asdf::plugin::install kubectl
