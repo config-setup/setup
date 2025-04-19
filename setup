@@ -110,6 +110,7 @@ setup() {
   asdf::plugin::install terraform
   asdf::plugin::install terragrunt
   asdf::plugin::install kubectl
+  asdf::plugin::install redis
 
   # asdf languages
   asdf::plugin::install python latest:3.12.7
