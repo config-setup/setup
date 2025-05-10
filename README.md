@@ -3,8 +3,6 @@
 #### Ubuntu
 
 ```
-apt update
-apt install software-properties-common git zsh tmux dirmngr gpg gawk -y
 sudo apt update
 sudo apt install software-properties-common \
   git zsh tmux dirmngr gpg gawk \
