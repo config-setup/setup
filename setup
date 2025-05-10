@@ -8,7 +8,7 @@ ARCH=$(uname -m)
 case "$ARCH" in
 x86_64) ARCH="amd64" ;;
 armv7l) ARCH="arm" ;;
-aarch64|arm64) ARCH="arm64" ;;
+aarch64 | arm64) ARCH="arm64" ;;
 i386) ARCH="386" ;;
 *)
   echo "Unsupported architecture: $ARCH"
@@ -20,10 +20,30 @@ command_exists() {
   command -v "$@" >/dev/null 2>&1
 }
 
-setup::download() {
-  path=$1
-  file=$(basename "$path")
-  curl -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" -o "$path"
+download::file() {
+  local args=""
+  local url
+  local dir
+  local file
+
+  if [[ $1 == -* ]]; then
+    local args=$1
+    local url=$2
+    local dir=$3
+  else
+    local url=$1
+    local dir=$2
+  fi
+
+  file="$dir/$(basename $url)"
+
+  echo curl "$args" "$url" --create-dirs -o "$file"
+  curl "$args" "$url" --create-dirs -o "$file"
+
+  if [[ $file == *.zip ]]; then
+    unzip -o "$file" -d "$(dirname $file)"
+    rm "$file"
+  fi
 }
 
 git::clone() {
@@ -39,47 +59,41 @@ git::clone() {
   fi
 }
 
-# git::download() {
-#   local repo_url=$1
-#   local file=$2
-#   local target_dir=$3
-#
-#   local latest_release=$(curl -s $repo_url | grep -oP '"tag_name": "\K[^"]+')
-#   local download_url="$repo/releases/download/$ASDF_LATEST_RELEASE/asdf-$ASDF_LATEST_RELEASE-$OS-$ARCH.tar.gz"
-#   curl -fsSL  | tar -xz -C ~/.local/bin/
-# }
+setup::download() {
+  local path=$1
+  local file=$(basename "$path")
+
+  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" "$path"
+}
 
 asdf::install() {
-
   local latest_release
   latest_release=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep '"tag_name": ' | sed 's/.*"tag_name": "\(.*\)".*/\1/')
 
   echo "ASDF Latest Release $latest_release"
 
   echo "https://github.com/asdf-vm/asdf/releases/download/$latest_release/asdf-$latest_release-$OS-$ARCH.tar.gz"
-
   curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$latest_release/asdf-$latest_release-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin/
 }
 
 asdf::plugin::install() {
-  local plugin=$1
-  local version=${2:-latest}
   local asdf=~/.local/bin/asdf
 
-  if [[ -z $(asdf plugin list | grep "$plugin") ]]; then
-    asdf plugin add "$plugin"
+  local plugin=$1
+  local version=${2:-latest}
+
+  if [[ -z $(eval "$asdf plugin list" | grep "$plugin") ]]; then
+    eval "$asdf plugin add $plugin"
   else
-    asdf plugin update "$plugin" &> /dev/null
+    eval "$asdf plugin update $plugin" &>/dev/null
   fi
 
-  if [[ -z $(asdf list "$plugin" | grep "$version") ]]; then
-    asdf install "$plugin" "$version"
+  if [[ -z $(eval "$asdf list $plugin" | grep "$version") ]]; then
+    eval "$asdf install $plugin $version"
   fi
 
-  asdf set --home "$plugin" "$version"
-  echo "$plugin set to $(asdf list $plugin | grep \* | sed -e 's/ \*//')"
-
-
+  eval "$asdf set --home $plugin $version"
+  echo "$plugin set to $(eval "$asdf list $plugin" | grep \* | sed -e 's/ \*//')"
 }
 
 setup() {
@@ -97,13 +111,17 @@ setup() {
   git::clone https://github.com/config-setup/nvim.git ~/.config/nvim
   git::clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
+  # font install
+  download::file -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hasklig.zip ~/.local/share/fonts/Hasklig.zip
+
+  # font cache reset
+  fc-cache -fv
+
   # asdf
-  
   asdf::install
 
   # asdf tools
   asdf::plugin::install jq
-  asdf::plugin::install starship
   asdf::plugin::install neovim stable
   asdf::plugin::install lazydocker
   asdf::plugin::install lazygit
