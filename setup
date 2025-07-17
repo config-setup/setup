@@ -16,10 +16,6 @@ i386) ARCH="386" ;;
   ;;
 esac
 
-command_exists() {
-  command -v "$@" >/dev/null 2>&1
-}
-
 download::file() {
   local args=""
   local url
@@ -70,43 +66,6 @@ git::clone() {
   fi
 }
 
-setup::download() {
-  local path=$1
-  local file=$(basename "$path")
-
-  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/"$file" "$path"
-}
-
-asdf::install() {
-  local latest_release
-  latest_release=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | grep '"tag_name": ' | sed 's/.*"tag_name": "\(.*\)".*/\1/')
-
-  echo "ASDF Latest Release $latest_release"
-
-  echo "https://github.com/asdf-vm/asdf/releases/download/$latest_release/asdf-$latest_release-$OS-$ARCH.tar.gz"
-  curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$latest_release/asdf-$latest_release-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin/
-}
-
-asdf::plugin::install() {
-  local asdf=~/.local/bin/asdf
-
-  local plugin=$1
-  local version=${2:-latest}
-
-  if [[ -z $(eval "$asdf plugin list" | grep "$plugin") ]]; then
-    eval "$asdf plugin add $plugin"
-  else
-    eval "$asdf plugin update $plugin" &>/dev/null
-  fi
-
-  if [[ -z $(eval "$asdf list $plugin" | grep "$version") ]]; then
-    eval "$asdf install $plugin $version"
-  fi
-
-  eval "$asdf set --home $plugin $version"
-  echo "$plugin set to $(eval "$asdf list $plugin" | grep \* | sed -e 's/ \*//')"
-}
-
 setup() {
   # ohmyzsh
   if [ -z "${ZSH}" ]; then
@@ -114,7 +73,7 @@ setup() {
   fi
 
   # config files
-  setup::download ~/.zshrc
+  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc ~/.zshrc
 
   # config flies in git
   git::clone git@github.com/config-setup/local-bin.git ~/.local/bin/
