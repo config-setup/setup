@@ -73,7 +73,7 @@ setup() {
   fi
 
   # config files
-  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc ~/.zshrc
+  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc ~
 
   # config flies in git
   git::clone git@github.com/config-setup/local-bin.git ~/.local/bin/
