@@ -93,5 +93,5 @@ update() {
   curl -sS https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/setup | bash -s -- "$@"
 }
 
-# Go env setup
-. ~/.asdf/plugins/golang/set-env.zsh
+# Enable mise
+eval "$(mise activate zsh)"

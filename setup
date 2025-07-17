@@ -50,10 +50,21 @@ git::clone() {
   local repo_url=$1
   local repo_dir=$2
 
+  # Local DIR exists
   if [ -d "$repo_dir" ]; then
     pushd "$repo_dir" &>/dev/null || exit
+
+    # Update url if it is wrong
+    if [[ $(git remote get-url origin) == "$repo_url" ]]; then
+      git remote set-url origin "$repo_url"
+    fi
+
+    # Pull updates
     echo "$repo_url $(git pull)"
+
     popd &>/dev/null || exit
+
+  # Clone Repo
   else
     echo "$repo_url $(git clone "$repo_url" "$repo_dir")"
   fi
@@ -106,10 +117,10 @@ setup() {
   setup::download ~/.zshrc
 
   # config flies in git
-  git::clone https://github.com/config-setup/local-bin.git ~/.local/bin/
-  git::clone https://github.com/config-setup/tmux.git ~/.config/tmux
-  git::clone https://github.com/config-setup/nvim.git ~/.config/nvim
-  git::clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  git::clone git@github.com/config-setup/local-bin.git ~/.local/bin/
+  git::clone git@github.com/config-setup/tmux.git ~/.config/tmux
+  git::clone git@github.com/config-setup/nvim.git ~/.config/nvim
+  git::clone git@github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
   # font install
   download::file -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hasklig.zip ~/.local/share/fonts/Hasklig.zip
@@ -117,24 +128,24 @@ setup() {
   # font cache reset
   fc-cache -fv
 
-  # asdf
-  asdf::install
+  # mise install
+  curl https://mise.run | sh
 
-  # asdf tools
-  asdf::plugin::install jq
-  asdf::plugin::install neovim stable
-  asdf::plugin::install lazydocker
-  asdf::plugin::install lazygit
-  asdf::plugin::install terraform
-  asdf::plugin::install terragrunt
-  asdf::plugin::install kubectl
-  asdf::plugin::install redis
+  # tools
+  ~/.local/bin/mise use jq
+  ~/.local/bin/mise use neovim@stable
+  ~/.local/bin/mise use lazydocker
+  ~/.local/bin/mise use lazygit
+  ~/.local/bin/mise use terraform
+  ~/.local/bin/mise use terragrunt
+  ~/.local/bin/mise use kubectl
+  ~/.local/bin/mise use redis
 
-  # asdf languages
-  asdf::plugin::install python latest:3.12.7
-  asdf::plugin::install nodejs
-  asdf::plugin::install golang
-  asdf::plugin::install rust
+  # languages
+  ~/.local/bin/mise use python@3.12.7
+  ~/.local/bin/mise use nodejs
+  ~/.local/bin/mise use golang
+  ~/.local/bin/mise use rust
 
   # Python Packages
   python3 -m pip install -U pip ruff
