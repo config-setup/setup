@@ -91,23 +91,20 @@ setup() {
   curl https://mise.run | sh
 
   # tools
-  ~/.local/bin/mise use jq
-  ~/.local/bin/mise use neovim@stable
-  ~/.local/bin/mise use lazydocker
-  ~/.local/bin/mise use lazygit
-  ~/.local/bin/mise use terraform
-  ~/.local/bin/mise use terragrunt
-  ~/.local/bin/mise use kubectl
-  ~/.local/bin/mise use redis
+  mise use --global --yes \
+    jq@latest neovim@latest ruff@latest \
+    lazydocker@latest lazygit@latest \
+    terraform@latest terragrunt@latest \
+    kubectl@latest \
+    redis@latest
 
   # languages
-  ~/.local/bin/mise use python@3.12.7
-  ~/.local/bin/mise use nodejs
-  ~/.local/bin/mise use golang
-  ~/.local/bin/mise use rust
+  mise use --global --yes \
+    python@latest nodejs@latest \
+    golang@latest rust@latest
 
-  # Python Packages
-  python3 -m pip install -U pip ruff
+  # Update pip
+  python3 -m pip install -U pip
 }
 
 setup::docker() {
