@@ -89,17 +89,14 @@ setup() {
 
   # mise install
   curl https://mise.run | sh
+  eval "$(mise activate zsh)"
 
-  # tools
   mise use --global --yes \
     jq@latest neovim@latest ruff@latest \
     lazydocker@latest lazygit@latest \
     terraform@latest terragrunt@latest \
     kubectl@latest \
-    redis@latest
-
-  # languages
-  mise use --global --yes \
+    redis@latest \
     python@latest nodejs@latest \
     golang@latest rust@latest
 
