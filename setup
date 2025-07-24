@@ -16,14 +16,6 @@ i386) ARCH="386" ;;
   ;;
 esac
 
-# Set packages to install
-PACKAGES=(
-  starship
-  jq fzf neovim lazydocker lazygit ruff
-  opentofu terragrunt kubectl k3d
-  python node goland rust
-)
-
 download::file() {
   local args=""
   local url
@@ -39,13 +31,13 @@ download::file() {
     local dir=$2
   fi
 
-  file="$dir/$(basename $url)"
+  file="$dir/$(basename "$url")"
 
   echo curl "$args" "$url" --create-dirs -o "$file"
   curl "$args" "$url" --create-dirs -o "$file"
 
   if [[ $file == *.zip ]]; then
-    unzip -o "$file" -d "$(dirname $file)"
+    unzip -o "$file" -d "$(dirname "$file")"
     rm "$file"
   fi
 }
@@ -105,21 +97,10 @@ setup() {
 
   # use mise to install tools
   mise use --global --yes \
-    starship@latest \
-    jq@latest \
-    fzf@latest \
-    neovim@latest \
-    lazydocker@latest \
-    lazygit@latest \
-    ruff@latest \
-    opentofu@latest \
-    terragrunt@latest \
-    kubectl@latest \
-    k3d@latest \
-    python@latest \
-    node@latest \
-    golang@latest \
-    rust@latest
+    neovim tmux starship \
+    jq fzf lazydocker lazygit ruff \
+    opentofu terragrunt kubectl k3d \
+    python node golang rust
 
   # Update pip
   python3 -m pip install -U pip

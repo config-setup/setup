@@ -1,11 +1,16 @@
 # Setup for local env
 
+<!--toc:start-->
+- [Setup for local env](#setup-for-local-env)
+      - [Ubuntu](#ubuntu)
+<!--toc:end-->
+
 #### Ubuntu
 
 ```
 sudo apt update
 sudo apt install software-properties-common \
-  git zsh tmux dirmngr gpg gawk \
+  git zsh gawk \
   build-essential libssl-dev zlib1g-dev \
   libbz2-dev libreadline-dev libsqlite3-dev \
   libncursesw5-dev xz-utils tk-dev libxml2-dev \
