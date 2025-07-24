@@ -16,6 +16,14 @@ i386) ARCH="386" ;;
   ;;
 esac
 
+# Set packages to install
+PACKAGES=(
+  starship
+  jq fzf neovim lazydocker lazygit ruff
+  opentofu terragrunt kubectl k3d
+  python node goland rust
+)
+
 download::file() {
   local args=""
   local url
@@ -88,17 +96,30 @@ setup() {
   fc-cache -fv
 
   # mise install
-  curl https://mise.run | sh
-  eval "$(mise activate zsh)"
+  curl https://mise.run | MISE_QUIET=1 sh
 
+  # activate mise if it's not aleady active
+  if ! command -v mise >/dev/null 2>&1; then
+    eval "$("$HOME/.local/bin/mise" activate zsh)"
+  fi
+
+  # use mise to install tools
   mise use --global --yes \
-    jq@latest neovim@latest ruff@latest \
-    lazydocker@latest lazygit@latest \
-    terraform@latest terragrunt@latest \
+    starship@latest \
+    jq@latest \
+    fzf@latest \
+    neovim@latest \
+    lazydocker@latest \
+    lazygit@latest \
+    ruff@latest \
+    opentofu@latest \
+    terragrunt@latest \
     kubectl@latest \
-    redis@latest \
-    python@latest nodejs@latest \
-    golang@latest rust@latest
+    k3d@latest \
+    python@latest \
+    node@latest \
+    golang@latest \
+    rust@latest
 
   # Update pip
   python3 -m pip install -U pip
