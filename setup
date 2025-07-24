@@ -1,47 +1,5 @@
 #!/usr/bin/env bash
 
-# Detect OS
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-
-# Detect Architecture
-ARCH=$(uname -m)
-case "$ARCH" in
-x86_64) ARCH="amd64" ;;
-armv7l) ARCH="arm" ;;
-aarch64 | arm64) ARCH="arm64" ;;
-i386) ARCH="386" ;;
-*)
-  echo "Unsupported architecture: $ARCH"
-  exit 1
-  ;;
-esac
-
-download::file() {
-  local args=""
-  local url
-  local dir
-  local file
-
-  if [[ $1 == -* ]]; then
-    local args=$1
-    local url=$2
-    local dir=$3
-  else
-    local url=$1
-    local dir=$2
-  fi
-
-  file="$dir/$(basename "$url")"
-
-  echo curl "$args" "$url" --create-dirs -o "$file"
-  curl "$args" "$url" --create-dirs -o "$file"
-
-  if [[ $file == *.zip ]]; then
-    unzip -o "$file" -d "$(dirname "$file")"
-    rm "$file"
-  fi
-}
-
 git::clone() {
   local repo_url=$1
   local repo_dir=$2
@@ -73,7 +31,7 @@ setup() {
   fi
 
   # config files
-  download::file -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc ~
+  curl -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc -output "$HOME/.zshrc"
 
   # config flies in git
   git::clone git@github.com/config-setup/local-bin.git ~/.local/bin/
@@ -82,7 +40,9 @@ setup() {
   git::clone git@github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
   # font install
-  download::file -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hasklig.zip ~/.local/share/fonts/Hasklig.zip
+  curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hasklig.zip -o /tmp/Hasklig.zip
+  unzip -o /tmp/Hasklig.zip -d "$HOME/.local/share/fonts/"
+  rm /tmp/Hasklig.zip
 
   # font cache reset
   fc-cache -fv
