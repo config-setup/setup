@@ -57,7 +57,7 @@ setup() {
 
   # use mise to install tools
   mise use --global --yes \
-    neovim tmux starship \
+    neovim starship \
     jq fzf lazydocker lazygit ruff \
     opentofu terragrunt kubectl k3d \
     python node golang rust
