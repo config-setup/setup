@@ -95,3 +95,8 @@ update() {
 
 # Enable mise
 eval "$(mise activate zsh)"
+
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+  tmux attach-session -t default || tmux new-session -s default
+fi
+
