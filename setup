@@ -22,6 +22,11 @@ git::clone() {
   else
     echo "$repo_url $(git clone "$repo_url" "$repo_dir")"
   fi
+
+  # If the repo has a setup script then run it
+  if [[ -f "$repo_dir/setup.sh" ]]; then 
+    ./"$repo_dir"/setup.sh
+  fi
 }
 
 setup() {
@@ -38,6 +43,7 @@ setup() {
   git::clone git@github.com/config-setup/local-bin.git ~/.local/bin/
   git::clone git@github.com/config-setup/tmux.git ~/.config/tmux
   git::clone git@github.com/config-setup/nvim.git ~/.config/nvim
+  git::clone git@github.com/config-setup/kitty.git ~/.config/kitty
   git::clone git@github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
   # font install
@@ -65,6 +71,7 @@ setup() {
 
   # Update pip
   python3 -m pip install -U pip
+
 }
 
 setup::docker() {
