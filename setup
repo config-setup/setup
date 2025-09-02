@@ -5,7 +5,9 @@ git::clone() {
   local repo_dir=$2
 
   # Local DIR exists
-  if [ -d "$repo_dir" ]; then
+  # if [ -d "$repo_dir" ]; then
+  if [ -d "$repo_dir/.git" ]; then 
+
     pushd "$repo_dir" &>/dev/null || exit
 
     # Update url if it is wrong
