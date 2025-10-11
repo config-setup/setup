@@ -39,7 +39,7 @@ setup() {
 
   # config files
   echo "Pulling .zshrc from https://github.com/config-setup/setup/blob/main/.zshrc"
-  curl -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/.zshrc -o "$HOME/.zshrc"
+  curl -fsSL https://raw.githubusercontent.com/config-setup/setup/refs/heads/main/zshrc -o "$HOME/.zshrc"
 
   # config flies in git
   git::clone git@github.com:config-setup/local-bin.git ~/.local/bin/
